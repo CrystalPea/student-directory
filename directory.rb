@@ -12,3 +12,7 @@ puts "Ami Mizuno"
 puts "Princess Bubblegum"
 puts "Marceline The Vampire Queen"
 puts "Dexter"
+
+print "12 amazing students "
+print "attend "
+puts "our academy <3"
