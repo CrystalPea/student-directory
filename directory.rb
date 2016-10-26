@@ -1,3 +1,4 @@
+student_count = 12
 #printing list of students:
 puts "The Students of Cartoons Academy"
 puts "---------"
@@ -14,6 +15,4 @@ puts "Princess Bubblegum"
 puts "Marceline The Vampire Queen"
 puts "Dexter"
 #printing total number of students
-print "12 amazing students " #important that print() doesn't add newline characters
-print "attend "
-puts "our academy <3"
+puts "#{student_count} amazing students attend our academy <3"
