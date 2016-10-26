@@ -1,6 +1,19 @@
-#student list as an array
-students = [
-{name: "Twilight Sparkle", cohort: :november},
+def input_students
+  puts "Please enter the names of the students."
+  puts "To finish, just hit return/enter twice"
+  students = []
+  name = gets.chomp
+  while !name.empty? do
+    students << {name: name, cohort: :november}
+    puts "Now we have #{students.count} students."
+    name = gets.chomp
+  end
+  students
+end
+
+students = input_students
+=begin
+[{name: "Twilight Sparkle", cohort: :november},
 {name: "Rainbow Dash", cohort: :november},
 {name: "Pinkie Pie", cohort: :november},
 {name: "Pearl", cohort: :november},
@@ -12,6 +25,7 @@ students = [
 {name: "Princess Bubblegum", cohort: :november},
 {name: "Marceline The Vampire Queen", cohort: :november},
 {name: "Dexter", cohort: :november}]
+=end
 
 def print_header
   puts "The Students of Cartoons Academy"
