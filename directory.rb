@@ -1,29 +1,29 @@
 #student list as an array
 students = [
-"Twilight Sparkle",
-"Rainbow Dash",
-"Pinkie Pie",
-"Pearl",
-"Steven Universe",
-"Kony",
-"Marco",
-"Star Butterfly",
-"Ami Mizuno",
-"Princess Bubblegum",
-"Marceline The Vampire Queen",
-"Dexter"]
+{name: "Twilight Sparkle", cohort: :november},
+{name: "Rainbow Dash", cohort: :november},
+{name: "Pinkie Pie", cohort: :november},
+{name: "Pearl", cohort: :november},
+{name: "Steven Universe", cohort: :november},
+{name: "Kony", cohort: :november},
+{name: "Marco", cohort: :november},
+{name: "Star Butterfly", cohort: :november},
+{name: "Ami Mizuno", cohort: :november},
+{name: "Princess Bubblegum", cohort: :november},
+{name: "Marceline The Vampire Queen", cohort: :november},
+{name: "Dexter", cohort: :november}]
 
 def print_header
   puts "The Students of Cartoons Academy"
   puts "---------"
 end
 
-def print(names)
-  names.each {|name| puts name}
+def print(students)
+  students.each {|student| puts "#{student[:name]} (#{student[:cohort]} cohort)"}
 end
 
-def print_footer(names)
-  puts "#{names.count} amazing students attend our academy <3"
+def print_footer(students)
+  puts "#{students.count} amazing students attend our academy <3"
 end
 
 print_header
