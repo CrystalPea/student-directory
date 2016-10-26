@@ -1,18 +1,31 @@
-student_count = 12
-#printing list of students:
-puts "The Students of Cartoons Academy"
-puts "---------"
-puts "Twilight Sparkle"
-puts "Rainbow Dash"
-puts "Pinkie Pie"
-puts "Pearl"
-puts "Steven Universe"
-puts "Kony"
-puts "Marco"
-puts "Star Butterfly"
-puts "Ami Mizuno"
-puts "Princess Bubblegum"
-puts "Marceline The Vampire Queen"
-puts "Dexter"
-#printing total number of students
-puts "#{student_count} amazing students attend our academy <3"
+#student list as an array
+students = [
+"Twilight Sparkle",
+"Rainbow Dash",
+"Pinkie Pie",
+"Pearl",
+"Steven Universe",
+"Kony",
+"Marco",
+"Star Butterfly",
+"Ami Mizuno",
+"Princess Bubblegum",
+"Marceline The Vampire Queen",
+"Dexter"]
+
+def print_header
+  puts "The Students of Cartoons Academy"
+  puts "---------"
+end
+
+def print(names)
+  names.each {|name| puts name}
+end
+
+def print_footer(names)
+  puts "#{names.count} amazing students attend our academy <3"
+end
+
+print_header
+print(students)
+print_footer(students)
