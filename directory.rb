@@ -1,3 +1,4 @@
+#printing list of students:
 puts "The Students of Cartoons Academy"
 puts "---------"
 puts "Twilight Sparkle"
@@ -12,7 +13,7 @@ puts "Ami Mizuno"
 puts "Princess Bubblegum"
 puts "Marceline The Vampire Queen"
 puts "Dexter"
-
-print "12 amazing students "
+#printing total number of students
+print "12 amazing students " #important that print() doesn't add newline characters
 print "attend "
 puts "our academy <3"
