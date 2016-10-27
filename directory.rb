@@ -48,6 +48,21 @@ def print(students)
   end
 end
 
+def pcohorts(students)
+  cohorts = []
+  students.each {|student| if !(cohorts.include? student[:cohort]) then cohorts << student[:cohort] end}
+  cohorts.each do |cohort|
+    puts cohort.to_s.upcase + ":"
+    n = 1
+    students.each do |student|
+      if student[:cohort] == cohort
+        puts "#{n}. #{student[:name]} (hobby: #{student[:hobby]}, origin: #{student[:origin]}, pony? #{student[:pony] ? "yes" : "no"})"
+        n += 1
+      end
+    end
+  end
+end
+
 
 def print_footer(students)
   puts "#{students.count} amazing student#{if (students.count) > 1 then "s" end} attend#{if (students.count) == 1 then "s" end} our academy <3".center($line_width)
@@ -55,4 +70,6 @@ end
 
 print_header
 print(students)
+puts
+pcohorts(students)
 print_footer(students)
