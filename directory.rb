@@ -95,7 +95,7 @@ end
 
 
 #a method for printing all the list, together with header and footer.
-def print_list
+def print_list(students)
   if students != []
     print_header
     puts "Would you like a messy list or a neat one that can filter by cohort? (messy/neat)"
@@ -111,3 +111,5 @@ def print_list
     print_footer(students)
   end
 end
+
+print_list(students)
