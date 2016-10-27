@@ -13,9 +13,9 @@ def input_students
     else cohort = :unknown
     end
     puts "What's their hobby?"
-    hobby = gets.chomp
+    hobby = gets.chop
     puts "Where do they come from?"
-    origin = gets.chomp
+    origin = gets.gsub("\n", "")
     puts "Are they a pony? (yes/no)"
     pony = gets.chomp
     if pony.downcase == "yes"
@@ -37,7 +37,7 @@ $line_width = 60
 
 def print_header
   puts "The Students of Cartoons Academy".center($line_width)
-  puts "---------"
+  puts "---------".center($line_width)
 end
 
 def print(students)
