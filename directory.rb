@@ -69,7 +69,14 @@ def print_footer(students)
 end
 
 print_header
-print(students)
-puts
-pcohorts(students)
+puts "Would you like a messy or a neat list? (messy/neat)"
+list = gets.chomp
+if list == "messy"
+  print(students)
+elsif list == "neat"
+  pcohorts(students)
+else
+  puts "I didn't get that. I will print you a neat list:"
+  pcohorts(students)
+end
 print_footer(students)
