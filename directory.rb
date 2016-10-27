@@ -39,16 +39,22 @@ def print_header
   puts "The Students of Cartoons Academy".center($line_width)
   puts "---------"
 end
+=begin
+def print(students)
+  st = students.dup
+  cohorts = []
+  students.each {|student| cohorts << student[:cohort] if !(cohorts.include? student[:cohort])}
+  while st 
+=end
 
 def print(students)
-  n = 0
-  while students[n] != nil
-    if ((students[n])[:name].downcase.start_with?("p")) && ((students[n])[:name].length < 12)
-      puts "#{n + 1}. #{(students[n])[:name]} (#{(students[n])[:cohort]} cohort, hobby: #{(students[n])[:hobby]}, origin: #{(students[n])[:origin]}, pony? #{(students[n])[:pony] ? "yes" : "no"})"
+  (students.sort_by {|p| p[:cohort]}).each.with_index do |student, index|
+    if (student[:name].downcase.start_with?("p")) && (student[:name].length < 12)
+        puts "#{index + 1}. #{student[:name]} (#{student[:cohort]} cohort, hobby: #{student[:hobby]}, origin: #{student[:origin]}, pony? #{student[:pony] ? "yes" : "no"})"
     end
-    n += 1
   end
 end
+
 
 def print_footer(students)
   puts "#{students.count} amazing students attend our academy <3".center($line_width)
