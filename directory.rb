@@ -26,7 +26,7 @@ def input_students
       pony = false
     end
     students << {name: name, cohort: cohort, hobby: hobby, origin: origin, pony: pony}
-    puts "Now we have #{students.count} students. If you want to add more, write their name. Otherwise just hit return/enter button."
+    puts "Now we have #{students.count} student#{if (students.count) > 1 then "s" end}. If you want to add more, write their name. Otherwise just hit return/enter button."
     name = gets.chomp
   end
   students
@@ -39,13 +39,6 @@ def print_header
   puts "The Students of Cartoons Academy".center($line_width)
   puts "---------"
 end
-=begin
-def print(students)
-  st = students.dup
-  cohorts = []
-  students.each {|student| cohorts << student[:cohort] if !(cohorts.include? student[:cohort])}
-  while st 
-=end
 
 def print(students)
   (students.sort_by {|p| p[:cohort]}).each.with_index do |student, index|
@@ -57,7 +50,7 @@ end
 
 
 def print_footer(students)
-  puts "#{students.count} amazing students attend our academy <3".center($line_width)
+  puts "#{students.count} amazing student#{if (students.count) > 1 then "s" end} attend#{if (students.count) == 1 then "s" end} our academy <3".center($line_width)
 end
 
 print_header
