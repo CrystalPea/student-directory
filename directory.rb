@@ -18,16 +18,17 @@ def input_students
       pony = false
     end
     students << {name: name, cohort: :november, hobby: hobby, origin: origin, pony: pony}
-    puts "Now we have #{students.count} students."
+    puts "Now we have #{students.count} students. If you want to add more, write their name. Otherwise just hit return/enter button."
     name = gets.chomp
   end
   students
 end
 
 students = input_students
+$line_width = 60
 
 def print_header
-  puts "The Students of Cartoons Academy"
+  puts "The Students of Cartoons Academy".center($line_width)
   puts "---------"
 end
 
@@ -35,14 +36,14 @@ def print(students)
   n = 0
   while students[n] != nil
     if ((students[n])[:name].downcase.start_with?("p")) && ((students[n])[:name].length < 12)
-      puts "#{n + 1}. #{(students[n])[:name]} (#{(students[n])[:cohort]} cohort)"
+      puts "#{n + 1}. #{(students[n])[:name]} (#{(students[n])[:cohort]} cohort, hobby: #{(students[n])[:hobby]}, origin: #{(students[n])[:origin]}, pony? #{(students[n])[:pony] ? "yes" : "no"})"
     end
     n += 1
   end
 end
 
 def print_footer(students)
-  puts "#{students.count} amazing students attend our academy <3"
+  puts "#{students.count} amazing students attend our academy <3".center($line_width)
 end
 
 print_header
