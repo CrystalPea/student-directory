@@ -12,20 +12,6 @@ def input_students
 end
 
 students = input_students
-=begin
-[{name: "Twilight Sparkle", cohort: :november},
-{name: "Rainbow Dash", cohort: :november},
-{name: "Pinkie Pie", cohort: :november},
-{name: "Pearl", cohort: :november},
-{name: "Steven Universe", cohort: :november},
-{name: "Kony", cohort: :november},
-{name: "Marco", cohort: :november},
-{name: "Star Butterfly", cohort: :november},
-{name: "Ami Mizuno", cohort: :november},
-{name: "Princess Bubblegum", cohort: :november},
-{name: "Marceline The Vampire Queen", cohort: :november},
-{name: "Dexter", cohort: :november}]
-=end
 
 def print_header
   puts "The Students of Cartoons Academy"
@@ -33,7 +19,11 @@ def print_header
 end
 
 def print(students)
-  students.each {|student| puts "#{student[:name]} (#{student[:cohort]} cohort)"}
+  students.each.with_index(1) do |student, index| 
+    if student[:name].start_with?("P")
+      puts "#{index}. #{student[:name]} (#{student[:cohort]} cohort)"
+    end
+  end
 end
 
 def print_footer(students)
