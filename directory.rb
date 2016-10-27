@@ -20,7 +20,7 @@ end
 
 def print(students)
   students.each.with_index(1) do |student, index| 
-    if student[:name].start_with?("P")
+    if (student[:name].downcase.start_with?("p")) && (student[:name].length < 12)
       puts "#{index}. #{student[:name]} (#{student[:cohort]} cohort)"
     end
   end
