@@ -4,7 +4,20 @@ def input_students
   students = []
   name = gets.chomp
   while !name.empty? do
-    students << {name: name, cohort: :november}
+    puts "What's their hobby?"
+    hobby = gets.chomp
+    puts "Where do they come from?"
+    origin = gets.chomp
+    puts "Are they a pony? (yes/no)"
+    pony = gets.chomp
+    if pony.downcase == "yes"
+      pony = true
+    elsif pony.downcase == "no"
+      pony = false
+    else puts "I didn't catch that. I will assume that they are not a pony."
+      pony = false
+    end
+    students << {name: name, cohort: :november, hobby: hobby, origin: origin, pony: pony}
     puts "Now we have #{students.count} students."
     name = gets.chomp
   end
