@@ -37,7 +37,7 @@ $line_width = 60
 
 def print_header
   puts "The Students of Cartoons Academy".center($line_width)
-  puts "---------".center($line_width)
+  puts "---------"
 end
 
 def print(students)
@@ -68,15 +68,17 @@ def print_footer(students)
   puts "#{students.count} amazing student#{if (students.count) > 1 then "s" end} attend#{if (students.count) == 1 then "s" end} our academy <3".center($line_width)
 end
 
-print_header
-puts "Would you like a messy or a neat list? (messy/neat)"
-list = gets.chomp
-if list == "messy"
-  print(students)
-elsif list == "neat"
-  pcohorts(students)
-else
-  puts "I didn't get that. I will print you a neat list:"
-  pcohorts(students)
+if students != []
+  print_header
+  puts "Would you like a messy or a neat list? (messy/neat)"
+  list = gets.chomp
+  if list == "messy"
+    print(students)
+  elsif list == "neat"
+    pcohorts(students)
+  else
+    puts "I didn't get that. I will print you a neat list:"
+    pcohorts(students)
+  end
+  print_footer(students)
 end
-print_footer(students)
