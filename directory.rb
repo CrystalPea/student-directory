@@ -19,10 +19,12 @@ def print_header
 end
 
 def print(students)
-  students.each.with_index(1) do |student, index| 
-    if (student[:name].downcase.start_with?("p")) && (student[:name].length < 12)
-      puts "#{index}. #{student[:name]} (#{student[:cohort]} cohort)"
+  n = 0
+  while students[n] != nil
+    if ((students[n])[:name].downcase.start_with?("p")) && ((students[n])[:name].length < 12)
+      puts "#{n + 1}. #{(students[n])[:name]} (#{(students[n])[:cohort]} cohort)"
     end
+    n += 1
   end
 end
 
