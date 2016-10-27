@@ -1,9 +1,17 @@
+require "date"
+
 def input_students
   puts "Please enter the names of the students."
   puts "To finish, just hit return/enter twice"
   students = []
   name = gets.chomp
   while !name.empty? do
+    puts "What cohort are they in?"
+    cohort = gets.chomp
+    if (cohort != nil) && ((Date::MONTHNAMES).include? cohort.capitalize)
+      cohort = cohort.downcase.to_sym
+    else cohort = :unknown
+    end
     puts "What's their hobby?"
     hobby = gets.chomp
     puts "Where do they come from?"
@@ -17,7 +25,7 @@ def input_students
     else puts "I didn't catch that. I will assume that they are not a pony."
       pony = false
     end
-    students << {name: name, cohort: :november, hobby: hobby, origin: origin, pony: pony}
+    students << {name: name, cohort: cohort, hobby: hobby, origin: origin, pony: pony}
     puts "Now we have #{students.count} students. If you want to add more, write their name. Otherwise just hit return/enter button."
     name = gets.chomp
   end
