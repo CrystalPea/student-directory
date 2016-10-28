@@ -40,7 +40,7 @@ end
 #a method for saving student list to file
 def save_students
   puts "How would you like to name your students list?"
-  file = File.open("#{gets.chomp}.csv", "w")
+  file = File.open("./lists/#{gets.chomp}.csv", "w")
   @students.each do |student|
     student_data = [student[:name], student[:cohort], student[:hobby], student[:origin], student[:pony]]
     csv_line = student_data.join(",")
