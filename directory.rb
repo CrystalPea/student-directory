@@ -44,7 +44,7 @@ def print_header
   puts "---------".center($line_width)
 end
 
-#a method for printing the footer of the list:
+#a method for printing the list footer:
 def print_footer
   puts "#{@students.count} amazing student#{if (@students.count) > 1 then "s" end} attend#{if (@students.count) == 1 then "s" end} our academy <3".center($line_width)
 end
@@ -81,20 +81,29 @@ def cc_filter
   end
 end
 
+#here be double filter method
+def double_filter
+maxchar = cc_filter
+letfil = letter_filter
+filtered = []
+@students.each {|student| if ((maxchar.include? student) && (letfil.include? student)) then filtered << student end}
+filtered
+end
+
+
 #method for filtering menu
 def filter_ask
-    puts @students
   students = @students
   loop do
-    puts "Would you like to filter students by first letter of their name or character count?\n1. by name\n2.by character count\n3.none"
+    puts "Would you like to filter students by first letter of their name or character count?\n1. by name\n2.by character count\n3.both\n4.none"
     filter = gets.chomp
     if filter == "1"
-      students = letter_filter
-      break
+     return students = letter_filter
     elsif filter == "2"
-      students = cc_filter
-      break
+      return students = cc_filter
     elsif filter == "3"
+      return students = double_filter
+    elsif filter == "4"
       puts "Well noted."
       break
     else puts "Please enter a valid answer"
