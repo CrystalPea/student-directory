@@ -6,9 +6,8 @@ $line_width = 60
 
 #a method for inputing students and data about the students:
 def input_students
-  puts "Please enter the names of the students."
+  puts "Please enter the names of the students. One name at a time, and then return button."
   puts "To finish, just hit return/enter twice"
-  @students = []
   name = STDIN.gets.chomp
   while !name.empty? do
     puts "What cohort are they in?"
@@ -76,7 +75,7 @@ end
 #a method for trying to load student list file from arguments supplied by command line
 def try_load_students
   filename = ARGV.first
-  return if filename.nil?
+  return load_students if filename.nil?
   if File.exists?(filename)
     load_students(filename)
     puts "Loaded #{@students.count} student#{if (@students.count) > 1 then "s" end} from #{filename}."
@@ -92,6 +91,7 @@ def load_students(filename = load_file)
   file.readlines.each do |line|
     name, cohort, hobby, origin, pony = line.chomp.split(",")
     @students << {name: name, cohort: cohort.to_sym, hobby: hobby, origin: origin, pony: to_boolean(pony)}
+    puts "Loaded #{@students.count} student#{if (@students.count) > 1 then "s" end} from #{filename}."
   end
   file.close
 end
@@ -118,7 +118,7 @@ def letter_filter
       @students.each {|student| if (student[:name].downcase.start_with?(letter.downcase)) then filtered << student end}
       return filtered
     elsif letter.length == 0
-      break
+      return @students
     else puts "Please enter exactly one letter."
     end
   end
@@ -134,7 +134,7 @@ def cc_filter
       @students.each {|student| if (student[:name].length < (cc.to_i)) then filtered << student end}
       return filtered
     elsif cc.length == 0
-      break
+      return @students
     else puts "Please enter a number value."
     end
   end
@@ -154,7 +154,7 @@ end
 def filter_ask
   students = @students
   loop do
-    puts "Would you like to filter students by first letter of their name or character count?\n1. by name\n2.by character count\n3.both\n4.none"
+    puts "Would you like to filter students by first letter of their name or character count?\n'1' - by name\n'2' - by character count\n'3' - both\n'4' - none"
     filter = STDIN.gets.chomp
     case filter
     when "1"
@@ -176,12 +176,13 @@ end
 #You can also choose to only see students from your chosen cohorts.
 def print_students_list
   students = filter_ask
+  return puts "No students meet your criteria. Sorry." if students == [] 
   cohorts = []
   students.each {|student| if !(cohorts.include? student[:cohort]) then cohorts << student[:cohort] end}
   loop do
     puts "Would you like to filter the students you see by cohort?
-    \n1. yes
-    \n2. no"
+    \n'1' for yes
+    \n'2' for no"
     answer = STDIN.gets.chomp
     if answer == "1"
       puts "Which cohort would you like to print?"
@@ -234,11 +235,11 @@ end
 #A method for printing our interactive menu
 def print_menu
   puts "Welcome to student directory. What would you like to do today?
-  \n 1. Input students
-  \n 2. Print student list
-  \n 3. Save students to a file
-  \n 4. Load students from a file
-  \n 9. Exit"
+  \n '1' - Input students
+  \n '2' - Print student list
+  \n '3' - Save students to a file
+  \n '4' - Load students from a file
+  \n '9' - Exit"
 end
 
 #A method for interactive menu selection process
