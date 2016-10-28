@@ -1,4 +1,5 @@
 require "date"
+@students = []
 
 #variables needed for methods below to work
 $line_width = 60
@@ -7,7 +8,7 @@ $line_width = 60
 def input_students
   puts "Please enter the names of the students."
   puts "To finish, just hit return/enter twice"
-  students = []
+  @students = []
   name = gets.chomp
   while !name.empty? do
     puts "What cohort are they in?"
@@ -29,11 +30,11 @@ def input_students
     else puts "I didn't catch that. I will assume that they are not a pony."
       pony = false
     end
-    students << {name: name, cohort: cohort, hobby: hobby, origin: origin, pony: pony}
-    puts "Now we have #{students.count} student#{if (students.count) > 1 then "s" end}. If you want to add more, write their name. Otherwise just hit return/enter button."
+    @students << {name: name, cohort: cohort, hobby: hobby, origin: origin, pony: pony}
+    puts "Now we have #{@students.count} student#{if (@students.count) > 1 then "s" end}. If you want to add more, write their name. Otherwise just hit return/enter button."
     name = gets.chomp
   end
-  students
+  @students
 end
 
 #a method for printing list header
@@ -44,23 +45,68 @@ def print_header
 end
 
 #a method for printing the footer of the list:
-def print_footer(students)
-  puts "#{students.count} amazing student#{if (students.count) > 1 then "s" end} attend#{if (students.count) == 1 then "s" end} our academy <3".center($line_width)
+def print_footer
+  puts "#{@students.count} amazing student#{if (@students.count) > 1 then "s" end} attend#{if (@students.count) == 1 then "s" end} our academy <3".center($line_width)
 end
 
-#a "messier", older method for printing student list. It includes filters that make it print only 
-#some students based on first letter of their name and number of characters in their name
-def print(students)
-  (students.sort_by {|p| p[:cohort]}).each.with_index do |student, index|
-    if (student[:name].downcase.start_with?("p")) && (student[:name].length < 12)
-        puts "#{index + 1}. #{student[:name]} (#{student[:cohort]} cohort, hobby: #{student[:hobby]}, origin: #{student[:origin]}, pony? #{student[:pony] ? "yes" : "no"})"
+#Method for filtering students by letter
+def letter_filter
+  filtered = []
+  loop do
+    puts "What letter? Press return button twice if you changed your mind."
+    letter = gets.chomp
+    if letter.length == 1
+      @students.each {|student| if (student[:name].downcase.start_with?(letter.downcase)) then filtered << student end}
+      return filtered
+    elsif letter.length == 0
+      break
+    else puts "Please enter exactly one letter."
     end
   end
 end
 
+#Method for filtering students by character count
+def cc_filter
+  filtered = []
+  loop do
+    puts "What is the max character count allowed? Press return button twice if you changed your mind."
+    cc = gets.chomp
+    if (cc.to_i).is_a? Integer
+      @students.each {|student| if (student[:name].length < (cc.to_i)) then filtered << student end}
+      return filtered
+    elsif cc.length == 0
+      break
+    else puts "Please enter a number value."
+    end
+  end
+end
+
+#method for filtering menu
+def filter_ask
+    puts @students
+  students = @students
+  loop do
+    puts "Would you like to filter students by first letter of their name or character count?\n1. by name\n2.by character count\n3.none"
+    filter = gets.chomp
+    if filter == "1"
+      students = letter_filter
+      break
+    elsif filter == "2"
+      students = cc_filter
+      break
+    elsif filter == "3"
+      puts "Well noted."
+      break
+    else puts "Please enter a valid answer"
+    end
+  end
+  students
+end
+
 #Below method prints students into separate lists depending on their cohort.
 #You can also choose to only see students from your chosen cohorts.
-def pcohorts(students)
+def pcohorts
+  students = filter_ask
   cohorts = []
   students.each {|student| if !(cohorts.include? student[:cohort]) then cohorts << student[:cohort] end}
   loop do
@@ -108,47 +154,36 @@ end
 
 
 #a method for printing all the list, together with header and footer.
-def print_list(students)
-  if students != []
-    puts "Would you like a messy list or a neat one that can filter by cohort?
-    \n1. messy
-    \n2. neat"
-    list = gets.chomp
-    if list == "1"
-      print(students)
-    elsif list == "2"
-      pcohorts(students)
-    else
-      puts "I didn't get that. I will print you a neat list:"
-      pcohorts(students)
-    end
-    print_footer(students)
+def print_list
+  if @students != []
+    pcohorts
+    print_footer
   else puts "No students to print."
   end
 end
 
+#A method for printing our interactive menu
+def print_menu
+  puts "Welcome to student directory. What would you like to do today?
+  \n 1. Input students
+  \n 2. Print student list
+  \n 9. Exit"
+end
+
 #An interactive menu to, well, interact with our program :)
-def interactive_menu  
-  students = []
+def interactive_menu
   loop do
-    # 1. print the menu and ask the user what to do
-    puts "Welcome to student directory. What would you like to do today?
-    \n 1. Input students
-    \n 2. Print student list
-    \n 9. Exit"
-    # 2. read the input and save it into a variable
+    print_menu
     answer = gets.chomp
-    # 3. do what the user has asked
     case answer
     when "1"
-      students = input_students
+      @students = input_students
     when "2"
-      print_list(students)
+      print_list
     when "9"
       break
     else puts "Please enter a number corresponding to your desired action."
     end
-    # 4. repeat from step 1
   end
 end
 
