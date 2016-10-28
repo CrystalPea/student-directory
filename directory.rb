@@ -9,20 +9,20 @@ def input_students
   puts "Please enter the names of the students."
   puts "To finish, just hit return/enter twice"
   @students = []
-  name = gets.chomp
+  name = STDIN.gets.chomp
   while !name.empty? do
     puts "What cohort are they in?"
-    cohort = gets.chomp
+    cohort = STDIN.gets.chomp
     if (cohort != nil) && ((Date::MONTHNAMES).include? cohort.capitalize)
       cohort = cohort.downcase.to_sym
     else cohort = :unknown
     end
     puts "What's their hobby?"
-    hobby = gets.chop
+    hobby = STDIN.gets.chop
     puts "Where do they come from?"
-    origin = gets.gsub("\n", "")
+    origin = STDIN.gets.gsub("\n", "")
     puts "Are they a pony? (yes/no)"
-    pony = gets.chomp
+    pony = STDIN.gets.chomp
     if pony.downcase == "yes"
       pony = true
     elsif pony.downcase == "no"
@@ -32,7 +32,7 @@ def input_students
     end
     @students << {name: name, cohort: cohort, hobby: hobby, origin: origin, pony: pony}
     puts "Now we have #{@students.count} student#{if (@students.count) > 1 then "s" end}. If you want to add more, write their name. Otherwise just hit return/enter button."
-    name = gets.chomp
+    name = STDIN.gets.chomp
   end
   @students
 end
@@ -40,7 +40,7 @@ end
 #a method for saving student list to file
 def save_students
   puts "How would you like to name your students list?"
-  file = File.open("./lists/#{gets.chomp}.csv", "w")
+  file = File.open("./lists/#{STDIN.gets.chomp}.csv", "w")
   @students.each do |student|
     student_data = [student[:name], student[:cohort], student[:hobby], student[:origin], student[:pony]]
     csv_line = student_data.join(",")
@@ -54,29 +54,46 @@ def to_boolean(str)
   str == 'true'
 end
 
-#a method for loading a student list from a file
-def load_students
+def load_file
   if ((Dir["./lists/*.csv"]).length) == 0
     puts "Nothing to load sadly."
   else which = nil
     loop do
-      puts "Which from following files would you like to open? Hit return twice to quit"
+      puts "Input the path of the file you would like to load ...Or hit return twice to quit"
       puts (Dir["./lists/*.csv"].join("\n"))
-      which = gets.chomp
-      if (Dir["./lists/*.csv"]).include? which
+      which = STDIN.gets.chomp
+      if (Dir["./lists/*.csv"]).include? "#{which}"
         break
       elsif which == ""
         return puts "Ok, back to menu."
       else puts "No file like this. Try again."
       end
     end
-    file = File.open("#{which}", "r")
-    file.readlines.each do |line|
-      name, cohort, hobby, origin, pony = line.chomp.split(",")
-      @students << {name: name, cohort: cohort.to_sym, hobby: hobby, origin: origin, pony: to_boolean(pony)}
-    end
-    file.close
   end
+  which
+end
+
+#a method for trying to load student list file from arguments supplied by command line
+def try_load_students
+  filename = ARGV.first
+  return if filename.nil?
+  if File.exists?(filename)
+    load_students(filename)
+    puts "Loaded #{@students.count} student#{if (@students.count) > 1 then "s" end} from #{filename}."
+  else
+    puts "Sorry, no file #{filename} doesn't exist."
+    return
+  end
+end
+
+#a method for loading a student list from a file
+def load_students(filename = load_file)
+  file = File.open("#{filename}", "r")
+  file.readlines.each do |line|
+    name, cohort, hobby, origin, pony = line.chomp.split(",")
+    @students << {name: name, cohort: cohort.to_sym, hobby: hobby, origin: origin, pony: to_boolean(pony)}
+  end
+  file.close
 end
 
 #a method for printing list header
@@ -96,7 +113,7 @@ def letter_filter
   filtered = []
   loop do
     puts "What letter? Press return button twice if you changed your mind."
-    letter = gets.chomp
+    letter = STDIN.gets.chomp
     if letter.length == 1
       @students.each {|student| if (student[:name].downcase.start_with?(letter.downcase)) then filtered << student end}
       return filtered
@@ -112,7 +129,7 @@ def cc_filter
   filtered = []
   loop do
     puts "What is the max character count allowed? Press return button twice if you changed your mind."
-    cc = gets.chomp
+    cc = STDIN.gets.chomp
     if (cc.to_i).is_a? Integer
       @students.each {|student| if (student[:name].length < (cc.to_i)) then filtered << student end}
       return filtered
@@ -138,7 +155,7 @@ def filter_ask
   students = @students
   loop do
     puts "Would you like to filter students by first letter of their name or character count?\n1. by name\n2.by character count\n3.both\n4.none"
-    filter = gets.chomp
+    filter = STDIN.gets.chomp
     case filter
     when "1"
      return students = letter_filter
@@ -165,11 +182,11 @@ def print_students_list
     puts "Would you like to filter the students you see by cohort?
     \n1. yes
     \n2. no"
-    answer = gets.chomp
+    answer = STDIN.gets.chomp
     if answer == "1"
       puts "Which cohort would you like to print?"
       puts "You can choose from: #{cohorts.join(", ")}"
-      filter = gets.chomp
+      filter = STDIN.gets.chomp
       if (filter != nil) && ((Date::MONTHNAMES).include? filter.capitalize)
         print_header
         puts filter.upcase + ":"
@@ -234,7 +251,7 @@ def process(a)
   when "3"
     save_students
   when "4"
-    load_students
+    try_load_students
   when "9"
     exit
   else puts "Please enter a number corresponding to your desired action."
@@ -245,7 +262,7 @@ end
 def interactive_menu
   loop do
     print_menu
-    process(gets.chomp)
+    process(STDIN.gets.chomp)
   end
 end
 
