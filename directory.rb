@@ -49,6 +49,36 @@ def save_students
   file.close
 end
 
+#a method for converting strings to booleans, needed for loading method
+def to_boolean(str)
+  str == 'true'
+end
+
+#a method for loading a student list from a file
+def load_students
+  if ((Dir["./lists/*.csv"]).length) == 0
+    puts "Nothing to load sadly."
+  else which = nil
+    loop do
+      puts "Which from following files would you like to open? Hit return twice to quit"
+      puts (Dir["./lists/*.csv"].join("\n"))
+      which = gets.chomp
+      if (Dir["./lists/*.csv"]).include? which
+        break
+      elsif which == ""
+        return puts "Ok, back to menu."
+      else puts "No file like this. Try again."
+      end
+    end
+    file = File.open("#{which}", "r")
+    file.readlines.each do |line|
+      name, cohort, hobby, origin, pony = line.chomp.split(",")
+      @students << {name: name, cohort: cohort.to_sym, hobby: hobby, origin: origin, pony: to_boolean(pony)}
+    end
+    file.close
+  end
+end
+
 #a method for printing list header
 def print_header
   puts ""
@@ -131,8 +161,6 @@ def print_students_list
   students = filter_ask
   cohorts = []
   students.each {|student| if !(cohorts.include? student[:cohort]) then cohorts << student[:cohort] end}
-  #cohorts.each {|cohort| cohort.to_s.capitalize}
-  #cohorts = cohorts.sort_by(Date::MONTHNAMES)
   loop do
     puts "Would you like to filter the students you see by cohort?
     \n1. yes
@@ -192,6 +220,7 @@ def print_menu
   \n 1. Input students
   \n 2. Print student list
   \n 3. Save students to a file
+  \n 4. Load students from a file
   \n 9. Exit"
 end
 
@@ -204,6 +233,8 @@ def process(a)
     show_students
   when "3"
     save_students
+  when "4"
+    load_students
   when "9"
     exit
   else puts "Please enter a number corresponding to your desired action."
