@@ -97,13 +97,14 @@ def filter_ask
   loop do
     puts "Would you like to filter students by first letter of their name or character count?\n1. by name\n2.by character count\n3.both\n4.none"
     filter = gets.chomp
-    if filter == "1"
+    case filter
+    when "1"
      return students = letter_filter
-    elsif filter == "2"
+    when "2"
       return students = cc_filter
-    elsif filter == "3"
+    when "3"
       return students = double_filter
-    elsif filter == "4"
+    when "4"
       puts "Well noted."
       break
     else puts "Please enter a valid answer"
@@ -114,7 +115,7 @@ end
 
 #Below method prints students into separate lists depending on their cohort.
 #You can also choose to only see students from your chosen cohorts.
-def pcohorts
+def print_students_list
   students = filter_ask
   cohorts = []
   students.each {|student| if !(cohorts.include? student[:cohort]) then cohorts << student[:cohort] end}
@@ -163,9 +164,9 @@ end
 
 
 #a method for printing all the list, together with header and footer.
-def print_list
+def show_students
   if @students != []
-    pcohorts
+    print_students_list
     print_footer
   else puts "No students to print."
   end
@@ -179,20 +180,24 @@ def print_menu
   \n 9. Exit"
 end
 
+#A method for interactive menu selection process
+def process(a)
+  case a
+  when "1"
+    @students = input_students
+  when "2"
+    show_students
+  when "9"
+    break
+  else puts "Please enter a number corresponding to your desired action."
+  end
+end
+
 #An interactive menu to, well, interact with our program :)
 def interactive_menu
   loop do
     print_menu
-    answer = gets.chomp
-    case answer
-    when "1"
-      @students = input_students
-    when "2"
-      print_list
-    when "9"
-      break
-    else puts "Please enter a number corresponding to your desired action."
-    end
+    process(gets.chomp)
   end
 end
 
