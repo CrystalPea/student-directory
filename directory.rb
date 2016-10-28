@@ -1,8 +1,8 @@
 require "date"
-@students = []
 
 #variables needed for methods below to work
 $line_width = 60
+@students = []
 
 #a method for inputing students and data about the students:
 def input_students
@@ -35,6 +35,18 @@ def input_students
     name = gets.chomp
   end
   @students
+end
+
+#a method for saving student list to file
+def save_students
+  puts "How would you like to name your students list?"
+  file = File.open("#{gets.chomp}.csv", "w")
+  @students.each do |student|
+    student_data = [student[:name], student[:cohort], student[:hobby], student[:origin], student[:pony]]
+    csv_line = student_data.join(",")
+    file.puts csv_line
+  end
+  file.close
 end
 
 #a method for printing list header
@@ -119,6 +131,8 @@ def print_students_list
   students = filter_ask
   cohorts = []
   students.each {|student| if !(cohorts.include? student[:cohort]) then cohorts << student[:cohort] end}
+  #cohorts.each {|cohort| cohort.to_s.capitalize}
+  #cohorts = cohorts.sort_by(Date::MONTHNAMES)
   loop do
     puts "Would you like to filter the students you see by cohort?
     \n1. yes
@@ -177,6 +191,7 @@ def print_menu
   puts "Welcome to student directory. What would you like to do today?
   \n 1. Input students
   \n 2. Print student list
+  \n 3. Save students to a file
   \n 9. Exit"
 end
 
@@ -187,8 +202,10 @@ def process(a)
     @students = input_students
   when "2"
     show_students
+  when "3"
+    save_students
   when "9"
-    break
+    exit
   else puts "Please enter a number corresponding to your desired action."
   end
 end
