@@ -4,36 +4,9 @@ require "date"
 $line_width = 60
 @students = []
 
-#a method for inputing students and data about the students:
-def input_students
-  puts "Please enter the names of the students. One name at a time, and then return button."
-  puts "To finish, just hit return/enter twice"
-  name = STDIN.gets.chomp
-  while !name.empty? do
-    puts "What cohort are they in?"
-    cohort = STDIN.gets.chomp
-    if (cohort != nil) && ((Date::MONTHNAMES).include? cohort.capitalize)
-      cohort = cohort.downcase.to_sym
-    else cohort = :unknown
-    end
-    puts "What's their hobby?"
-    hobby = STDIN.gets.chop
-    puts "Where do they come from?"
-    origin = STDIN.gets.gsub("\n", "")
-    puts "Are they a pony? (yes/no)"
-    pony = STDIN.gets.chomp
-    if pony.downcase == "yes"
-      pony = true
-    elsif pony.downcase == "no"
-      pony = false
-    else puts "I didn't catch that. I will assume that they are not a pony."
-      pony = false
-    end
-    @students << {name: name, cohort: cohort, hobby: hobby, origin: origin, pony: pony}
-    puts "Now we have #{@students.count} student#{if (@students.count) > 1 then "s" end}. If you want to add more, write their name. Otherwise just hit return/enter button."
-    name = STDIN.gets.chomp
-  end
-  @students
+#a method to push data into @students array
+def push_data
+  @students << {name: name, cohort: cohort.to_sym, hobby: hobby, origin: origin, pony: pony.to_sym}
 end
 
 #a method for saving student list to file
@@ -48,11 +21,6 @@ def save_students
   file.close
 end
 
-#a method for converting strings to booleans, needed for loading method
-def to_boolean(str)
-  str == 'true'
-end
-
 def load_file
   if ((Dir["./lists/*.csv"]).length) == 0
     puts "Nothing to load sadly."
@@ -64,7 +32,8 @@ def load_file
       if (Dir["./lists/*.csv"]).include? "#{which}"
         break
       elsif which == ""
-        return puts "Ok, back to menu."
+        puts "Ok, back to menu."
+        return interactive_menu
       else puts "No file like this. Try again."
       end
     end
@@ -90,10 +59,39 @@ def load_students(filename = load_file)
   file = File.open("#{filename}", "r")
   file.readlines.each do |line|
     name, cohort, hobby, origin, pony = line.chomp.split(",")
-    @students << {name: name, cohort: cohort.to_sym, hobby: hobby, origin: origin, pony: to_boolean(pony)}
-    puts "Loaded #{@students.count} student#{if (@students.count) > 1 then "s" end} from #{filename}."
+    @students << {name: name, cohort: cohort.to_sym, hobby: hobby, origin: origin, pony: pony.to_sym}
+    #puts "Loaded #{@students.count} student#{if (@students.count) > 1 then "s" end} from #{filename}."
   end
   file.close
+end
+
+#a method for inputing students and data about the students:
+def input_students
+  puts "Please enter the names of the students. One name at a time, and then return button."
+  puts "To finish, just hit return/enter twice"
+  name = STDIN.gets.chomp
+  while !name.empty? do
+    puts "What cohort are they in?"
+    cohort = STDIN.gets.chomp.downcase
+    unless (cohort != nil) && ((Date::MONTHNAMES).include? cohort.capitalize)
+    cohort = "unknown"
+    end
+    puts "What's their hobby?"
+    hobby = STDIN.gets.chop
+    puts "Where do they come from?"
+    origin = STDIN.gets.gsub("\n", "")
+    puts "Are they a pony? (yes/no)"
+    pony = STDIN.gets.chomp
+    if (pony.downcase == "yes") || (pony.downcase == "no")
+      pony = pony.downcase
+    else puts "I didn't catch that. I will assume that they are not a pony."
+      pony = "no"
+    end
+    @students << {name: name, cohort: cohort.to_sym, hobby: hobby, origin: origin, pony: pony.to_sym}
+    puts "Now we have #{@students.count} student#{if (@students.count) > 1 then "s" end}. If you want to add more, write their name. Otherwise just hit return/enter button."
+    name = STDIN.gets.chomp
+  end
+  @students
 end
 
 #a method for printing list header
