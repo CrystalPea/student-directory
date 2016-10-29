@@ -4,11 +4,6 @@ require "date"
 $line_width = 60
 @students = []
 
-#a method to push data into @students array
-def push_data
-  @students << {name: name, cohort: cohort.to_sym, hobby: hobby, origin: origin, pony: pony.to_sym}
-end
-
 #a method for saving student list to file
 def save_students
   puts "How would you like to name your students list?"
@@ -44,29 +39,46 @@ end
 #a method for trying to load student list file from arguments supplied by command line
 def try_load_students
   filename = ARGV.first
-  return load_students if filename.nil?
+  if (filename.nil?)
+  return load_students 
+  end
   if File.exists?(filename)
     load_students(filename)
-    puts "Loaded #{@students.count} student#{if (@students.count) > 1 then "s" end} from #{filename}."
   else
-    puts "Sorry, no file #{filename} doesn't exist."
-    return
+    puts "Sorry, file #{filename}, supplied via command line, doesn't exist."
+    return load_students 
+  end
+end
+
+#a method for clearing student list
+def clear_list
+  puts "There are students on the program's student list already. Would you like to clear the list before adding new student(s)? Input:\n'1' for yes\n'2' for no"
+  loop do
+    answer = gets.chomp
+    if answer == "1"
+      return @students = []
+    elsif answer == "2"
+      return
+    else puts "Please enter '1' if you would like to clear student list or '2' if you would like to add to it."
+    end
   end
 end
 
 #a method for loading a student list from a file
 def load_students(filename = load_file)
+  if @students != [] then clear_list end
   file = File.open("#{filename}", "r")
   file.readlines.each do |line|
     name, cohort, hobby, origin, pony = line.chomp.split(",")
     @students << {name: name, cohort: cohort.to_sym, hobby: hobby, origin: origin, pony: pony.to_sym}
-    #puts "Loaded #{@students.count} student#{if (@students.count) > 1 then "s" end} from #{filename}."
+    puts "Loaded #{@students.count} student#{if (@students.count) > 1 then "s" end} from #{filename}."
   end
   file.close
 end
 
 #a method for inputing students and data about the students:
 def input_students
+  if @students != [] then clear_list end
   puts "Please enter the names of the students. One name at a time, and then return button."
   puts "To finish, just hit return/enter twice"
   name = STDIN.gets.chomp
@@ -264,5 +276,12 @@ def interactive_menu
     process(STDIN.gets.chomp)
   end
 end
+#a method to automatically load default student list if none provided by command line
+def autoload
+  if ARGV.first.nil?
+    load_students("./Cartoons_Academy_Students.csv")
+  end
+end
 
+autoload
 interactive_menu
