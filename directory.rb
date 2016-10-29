@@ -16,6 +16,7 @@ def save_students
   file.close
 end
 
+#a method for loading a file with a student list
 def load_file
   if ((Dir["./lists/*.csv"]).length) == 0
     puts "Nothing to load sadly."
@@ -54,7 +55,7 @@ end
 def clear_list
   puts "There are students on the program's student list already. Would you like to clear the list before adding new student(s)? Input:\n'1' for yes\n'2' for no"
   loop do
-    answer = gets.chomp
+    answer = STDIN.gets.chomp
     if answer == "1"
       return @students = []
     elsif answer == "2"
@@ -115,7 +116,7 @@ end
 
 #a method for printing the list footer:
 def print_footer
-  puts "#{@students.count} amazing student#{if (@students.count) > 1 then "s" end} attend#{if (@students.count) == 1 then "s" end} our academy <3".center($line_width)
+  puts "#{@students.count} amazing student#{if (@students.count) > 1 then "s" end} attend#{if (@students.count) == 1 then "s" end} our academy <3\n".center($line_width)
 end
 
 #Method for filtering students by letter
@@ -162,76 +163,65 @@ end
 
 #method for filtering menu
 def filter_ask
-  students = @students
   loop do
     puts "Would you like to filter students by first letter of their name or character count?\n'1' - by name\n'2' - by character count\n'3' - both\n'4' - none"
     filter = STDIN.gets.chomp
     case filter
-    when "1"
-     return students = letter_filter
-    when "2"
-      return students = cc_filter
-    when "3"
-      return students = double_filter
-    when "4"
-      puts "Well noted."
-      break
+    when "1"; return students = letter_filter
+    when "2"; return students = cc_filter
+    when "3"; return students = double_filter
+    when "4"; puts "Well noted."
+      return @students
     else puts "Please enter a valid answer"
     end
   end
-  students
 end
 
-#Below method prints students into separate lists depending on their cohort.
-#You can also choose to only see students from your chosen cohorts.
-def print_students_list
-  students = filter_ask
-  return puts "No students meet your criteria. Sorry." if students == [] 
-  cohorts = []
+#a method for filtering by cohort
+def cohort_filter(students)
+ cohorts = []
   students.each {|student| if !(cohorts.include? student[:cohort]) then cohorts << student[:cohort] end}
   loop do
-    puts "Would you like to filter the students you see by cohort?
-    \n'1' for yes
-    \n'2' for no"
+    puts "Would you like to filter the students you see by cohort?\n'1' for yes\n'2' for no"
     answer = STDIN.gets.chomp
     if answer == "1"
-      puts "Which cohort would you like to print?"
-      puts "You can choose from: #{cohorts.join(", ")}"
-      filter = STDIN.gets.chomp
+      puts "Which cohort would you like to print?\nYou can choose from: #{cohorts.join(", ")}"
+      filter = STDIN.gets.chomp.downcase
       if (filter != nil) && ((Date::MONTHNAMES).include? filter.capitalize)
-        print_header
-        puts filter.upcase + ":"
-        m = 1
-        students.each do |student|
-          if student[:cohort] == filter.downcase.to_sym
-            puts "#{m}. #{student[:name]} (hobby: #{student[:hobby]}, origin: #{student[:origin]}, pony? #{student[:pony] ? "yes" : "no"})"
-            m += 1
-          end
-        end
-        if m == 1 then puts "Sorry, no students in this cohort." end
+        cohorts = []
+        cohorts << filter.to_sym
         break
       else puts "I didn't understand that. You will have to try again."
       end
     elsif answer == "2"
       puts "You wanted to see all the cohorts, right? I got you:"
-      print_header
-      cohorts.each do |cohort|
-        puts cohort.to_s.upcase + ":"
-        n = 1
-        students.each do |student|
-          if student[:cohort] == cohort
-            puts "#{n}. #{student[:name]} (hobby: #{student[:hobby]}, origin: #{student[:origin]}, pony? #{student[:pony] ? "yes" : "no"})"
-            n += 1
-          end
-        end
-        puts ""
-      end
       break
     else puts "Choose a valid option to close the loop."
     end
   end
+  cohorts
 end
 
+#Below method prints students into separate lists depending on their cohort.
+#You can filter whom you want to print by firsdt letter of their name, max. name length or cohort.
+def print_students_list
+  students = filter_ask
+  return puts "No students meet your criteria. Sorry." if students == [] 
+  cohorts = cohort_filter(students)
+  print_header
+  cohorts.each do |cohort|
+    puts cohort.to_s.upcase + ":"
+    n = 1
+    students.each do |student|
+      if student[:cohort] == cohort
+        puts "#{n}. #{student[:name]} (hobby: #{student[:hobby]}, origin: #{student[:origin]}, pony: #{student[:pony]})"
+        n += 1
+      end
+    end
+    if n == 1 then puts "Sorry, no students in this cohort." end
+    puts ""
+  end
+end
 
 #a method for printing all the list, together with header and footer.
 def show_students
@@ -255,16 +245,11 @@ end
 #A method for interactive menu selection process
 def process(a)
   case a
-  when "1"
-    @students = input_students
-  when "2"
-    show_students
-  when "3"
-    save_students
-  when "4"
-    try_load_students
-  when "9"
-    exit
+  when "1"; @students = input_students
+  when "2"; show_students
+  when "3"; save_students
+  when "4"; try_load_students
+  when "9"; exit
   else puts "Please enter a number corresponding to your desired action."
   end
 end
@@ -276,12 +261,9 @@ def interactive_menu
     process(STDIN.gets.chomp)
   end
 end
-#a method to automatically load default student list if none provided by command line
-def autoload
-  if ARGV.first.nil?
-    load_students("./Cartoons_Academy_Students.csv")
-  end
-end
 
-autoload
+#a block to automatically load default student list if none provided by command line
+if ARGV.first.nil?
+    load_students("./Cartoons_Academy_Students.csv")
+end
 interactive_menu
