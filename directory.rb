@@ -9,16 +9,16 @@ def save_students
   puts "How would you like to name your students list? Hit return/enter button twice if you want to cancel."
   filename = STDIN.gets.chomp
   if filename != nil
-    file = File.open("./lists/#{filename}.csv", "w")
-    @students.each do |student|
-      student_data = [student[:name], student[:cohort], student[:hobby], student[:origin], student[:pony]]
-      csv_line = student_data.join(",")
-      file.puts csv_line
+    File.open "./lists/#{filename}.csv", "w" do |f|
+      @students.each do |student|
+        student_data = [student[:name], student[:cohort], student[:hobby], student[:origin], student[:pony]]
+        csv_line = student_data.join(",")
+        f.puts csv_line
+      end
     end
     puts "Your student list has been succesfully saved to ./lists/#{filename}.csv"
   else puts "Your student list has NOT been saved."
   end
-  file.close
 end
 
 #a method for loading a file with a student list
@@ -46,10 +46,10 @@ end
 def try_load_students
   filename = ARGV.first
   if (filename.nil?)
-  puts "Succesfully loaded file #{filename}."
   return load_students 
   end
   if File.exists?(filename)
+    puts "Succesfully loaded file #{filename}."
     load_students(filename)
   else
     puts "Sorry, file #{filename}, supplied via command line, doesn't exist."
@@ -76,13 +76,13 @@ end
 #a method for loading a student list from a file
 def load_students(filename = load_file)
   if @students != [] then clear_list end
-  file = File.open("#{filename}", "r")
-  file.readlines.each do |line|
-    name, cohort, hobby, origin, pony = line.chomp.split(",")
-    @students << {name: name, cohort: cohort.to_sym, hobby: hobby, origin: origin, pony: pony.to_sym}
+  File.open "#{filename}", "r" do |f|
+    f.readlines.each do |line|
+      name, cohort, hobby, origin, pony = line.chomp.split(",")
+      @students << {name: name, cohort: cohort.to_sym, hobby: hobby, origin: origin, pony: pony.to_sym}
+    end
     puts "Loaded #{@students.count} student#{if (@students.count) > 1 then "s" end} from #{filename}."
   end
-  file.close
 end
 
 #a method for inputing students and data about the students:
@@ -203,7 +203,7 @@ def cohort_filter(students)
       if (filter != nil) && ((Date::MONTHNAMES).include? filter.capitalize)
         cohorts = []
         cohorts << filter.to_sym
-        puts "Here you go, all students from #{filter.capitalize} cohort:"
+        puts "Here you go, all students (allowed by your filters) from #{filter.capitalize} cohort:"
         break
       else puts "I didn't understand that. You will have to try again."
       end
