@@ -72,12 +72,17 @@ def clear_list
   end
 end
 
+#a method for adding students data to array
+def add_to_arr(name, cohort, hobby, origin, pony)
+  @students << {name: name, cohort: cohort.to_sym, hobby: hobby, origin: origin, pony: pony.to_sym}
+end
+
 #a method for loading a student list from a file
 def load_students(filename = load_file)
   if @students != [] then clear_list end
   CSV.foreach("#{filename}") do |row|
       name, cohort, hobby, origin, pony = row
-      @students << {name: name, cohort: cohort.to_sym, hobby: hobby, origin: origin, pony: pony.to_sym}
+      add_to_arr(name, cohort, hobby, origin, pony)
   end
     puts "Loaded #{@students.count} student#{if (@students.count) > 1 then "s" end} from #{filename}."
 end
@@ -105,7 +110,7 @@ def input_students
     else puts "I didn't catch that. I will assume that they are not a pony."
       pony = "no"
     end
-    @students << {name: name, cohort: cohort.to_sym, hobby: hobby, origin: origin, pony: pony.to_sym}
+    add_to_arr(name, cohort, hobby, origin, pony)
     puts "Now we have #{@students.count} student#{if (@students.count) > 1 then "s" end}. If you want to add more, write their name. Otherwise just hit return/enter button."
     name = STDIN.gets.chomp
   end
